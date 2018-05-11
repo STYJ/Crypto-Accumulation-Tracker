@@ -5,10 +5,13 @@
 # @author STYJ
 # @contributor xlanor
 ##
-import os, sys,contextlib,pip
+import os
+import sys
+import contextlib
+import pip
 
 try:
-	from setuptools import setup, find_packages
+    from setuptools import setup, find_packages
 except ImportError:
 	from distutils.core import setup, find_packages
 
@@ -17,17 +20,18 @@ name = "Exchange bot"
 
 rootdir = os.path.abspath(os.path.dirname(__file__))
 
-links=[]
-requires=[]
+links = []
+requires = []
 
-#Python 3.4 and above
+# Python 3.4 and above
 if sys.version_info < (3, 4, 0, 'final', 0):
-	raise SystemExit ('Python 3.4 or later is required!')
+	raise SystemExit('Python 3.4 or later is required!')
 
-#Opening requirements.txt to obtain a list of libraries needed
+# Opening requirements.txt to obtain a list of libraries needed
 
-	# new versions of pip requires a session
-requirements = pip.req.parse_requirements('requirements.txt', session=pip.download.PipSession())
+# New versions of pip requires a session
+requirements = pip.req.parse_requirements('requirements.txt',
+										 session=pip.download.PipSession())
 
 for item in requirements:
 	# we want to handle package names and also repo urls
@@ -54,3 +58,4 @@ setup(
 		install_requires=requires,
 		dependency_links=links
 	)
+
