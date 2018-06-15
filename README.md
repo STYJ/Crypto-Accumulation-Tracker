@@ -7,21 +7,20 @@ Goal: To determine which exchange you can buy a coin from.
 
 #### Instructions:
 
-1. Create a file called token.txt with the Bot Api.
-2. Replace the location in line 15 with the location of your token.txt file.
+1. Update the token.txt file with the Bot API.
+2. Replace the location in line 20 of ExchangeBot.py with the location of your token.txt file.
 3. Run Python3 ExchangeBot.py (Make sure you have Requests and BeautifulSoup installed)
-4. Once the program is running, run the updateDB command which will update the internal database (dictionary) using CoinMarketCap's API. The DB will consist of coin name, ticker pairs. 
-5. To determine the exchange, run the command exchange followed by a ticker. 
+4. Once the program is running, it will automatically run the updateDB command which will update the internal database (dictionary) using CoinMarketCap. 
+5. To determine the exchanges available and the cumulative rolling 24 hour trade volume of a given ticker, run the exchange command followed by a ticker. 
 
 #### Notes:
-- When the exchange command is run for a coin for the first time, the code will scrape off CoinMarketCap via BeautifulSoup and Requests. This means 2 things:
-  1. If CMC's website structure changes, the code will break.
-  2. If the list of exchanges is updated, the cached results will need to be updated.
-
-- The caching functionality has been removed as I noticed that users are always forgetting to update (not sure if it is intentional or accidental). To reinstate caching functionality, please (un)comment the appropriate lines. ~~To update the cached results, run the updateExchange command.~~
+- There is a caching functionality included in the bot to help optimize retrieval speeds. 
+- The time threshold is set to 1 minute before the bot updates the cache for the specified coin.
+- There is also an automatic update of the DB every 6 hours however you may choose to manually update the DB with the updateDB command.
+- If CMC decides to change their code / UI, my bot WILL break. Do notify me at @itsmest if it happens and I'll try to fix it ASAP. 
 
 #### Issues to be fixed
-- [X] Determine how to handle coins with the same ticker, try KNC.
+- [X] Determine how to handle coins with the same ticker. Soln: Pick the first coin with that ticker.
 
 #### Upcoming Features
 - [X] Add description to my commands when typing /command in Telegram

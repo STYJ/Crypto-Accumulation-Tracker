@@ -5,8 +5,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import functions
 
 # Main code
-
-
 def main():
 
 	# Initiate logging module
@@ -22,23 +20,33 @@ def main():
 	f = open('token.txt', 'r')
 	tokenId = f.readline()
 
-	# Create bot object and its corresponding updater and dispatcher
+	# Create bot object and its corresponding updater, dispatcher and job queue
 	bot = telegram.Bot(token=tokenId)
 	updater = Updater(token=tokenId)
 	dispatcher = updater.dispatcher
+	jqueue = updater.job_queue
 
-	# Creating the relevant command handlers
-	updateDB_handler = CommandHandler('updateDB', functions.updateDBWrapper)
-	exchange_handler = CommandHandler(
-						'exchange', functions.exchangeWrapper, pass_args=True
-						)
+	# Scheduled jobs
+	# Automatically updates the DB every 6 hours
+	job_updateDB = jqueue.run_repeating(functions.autoUpdateDBWrapper,
+										interval=21600,
+										first =0
+										)
+	job_updateDB.enabled = True
+	
+	# Creating command handlers
+	updateDB_handler = CommandHandler('updateDB',
+									  functions.manualUpdateDBWrapper
+									  )
+	exchange_handler = CommandHandler('exchange',
+									  functions.exchangeWrapper, pass_args=True
+									  )
 
 	# Adding the handlers to the dispatcher
 	dispatcher.add_handler(updateDB_handler)
 	dispatcher.add_handler(exchange_handler)
 
-	# Disabled the following handlers to remove cache.
-	# Uncomment to reinstate caching functionality.
+	# Disabled the following handlers
 
 	# update_handler = CommandHandler('update',
 	# 								functions.updateWrapper,
