@@ -10,7 +10,7 @@ Goals:
 
 #### Instructions:
 
-1. Update the token.txt file with the Bot API.
+1. Update the contents of the token.txt file with the Bot API.
 2. Replace the location in line 20 of ExchangeBot.py with the location of your token.txt file.
 3. Run Python3 ExchangeBot.py (Make sure you have Requests and BeautifulSoup installed)
 4. Once the program is running, it will automatically run the updateDB command which will update the internal database (dictionary) using CoinMarketCap. 
