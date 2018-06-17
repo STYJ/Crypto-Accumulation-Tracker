@@ -27,24 +27,40 @@ def main():
 	jqueue = updater.job_queue
 
 	# Scheduled jobs
-	# Automatically updates the DB every 6 hours
-	job_updateDB = jqueue.run_repeating(functions.autoUpdateDBWrapper,
-										interval=21600,
-										first =0
-										)
-	job_updateDB.enabled = True
+	# Automatically updates the coin DB every 6 hours
+	job_updateCoinDB = jqueue.run_repeating(functions.autoUpdateDBWrapper,
+											interval=21600,
+											first =0
+											)
+	job_updateCoinDB.enabled = True
 	
 	# Creating command handlers
 	updateDB_handler = CommandHandler('updateDB',
 									  functions.manualUpdateDBWrapper
 									  )
-	exchange_handler = CommandHandler('exchange',
-									  functions.exchangeWrapper, pass_args=True
+	coin_handler = CommandHandler('c',
+								  functions.coinWrapper,
+								  pass_args=True
+								  )
+	cheapest_handler = CommandHandler('min',
+									  functions.cheapestWrapper,
+									  pass_args=True
 									  )
+	exchange_handler = CommandHandler('e',
+									  functions.exchangeWrapper,
+									  pass_args=True
+									  )
+	start_handler = CommandHandler('start',
+								   functions.startWrapper
+								   )
+
 
 	# Adding the handlers to the dispatcher
 	dispatcher.add_handler(updateDB_handler)
+	dispatcher.add_handler(coin_handler)
+	dispatcher.add_handler(cheapest_handler)
 	dispatcher.add_handler(exchange_handler)
+	dispatcher.add_handler(start_handler)
 
 	# Disabled the following handlers
 
