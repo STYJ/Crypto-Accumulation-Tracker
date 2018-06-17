@@ -707,19 +707,22 @@ def minOrMax(bot, update, args, order):
 def startWrapper(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id,
-                     text="Hi and welcome to the exchange explorer bot! The 3" +
+                     text="Hi and welcome to the exchange explorer bot! The 4" +
                      " main commands that are supported by this bot are:\n\n" +
-                     " 1. /c ticker - To determine the top 10 exchanges that" + 
-                     " this coin is traded on and its cumulative 24 hour" +
-                     " rolling trade volume.\n2. /min ticker - To determine" + 
-                     " the top 10 cheapest trading pairs for this coin from" +
-                     " the most liquid exchanges that this coin trades on." + 
-                     "\n3. /e exchange_name - To determine the 24" +
-                     " hour rolling trade volume and the top traded pairs" +
-                     " for the specified exchange.\n\nThis bot is created by" +
+                     " 1. /c ticker - To determine the exchanges available" +
+                     " and the cumulative 24 hour rolling trade volume for a" +
+                     " given ticker e.g. /c CND\n2. /min ticker [filter] -" +
+                     " To determine the cheapest exchange and its" +
+                     " corresponding trading pair for a given ticker e.g." + 
+                     " /min BTC **\n3. /max ticker [filter] - To determine" + 
+                     " the most expensive exchange and its corresponding" + 
+                     " trading pair for a given ticker e.g. /max BTC USD **\n" +
+                     " 4. /e exchange_name - To determine the cumulative 24" +
+                     " hour rolling trade volume, rank and its top traded" +
+                     " pairs for the specified exchange e.g. /e binance\n\n" +
+                     " ** Filter is optional.\n\nThis bot is created by" + 
                      " @itsmest. If you have any feedback or suggestions," +
-                     " feel free to drop me a message!."
-                     )
+                     " feel free to drop me a message!.")
 
 # Command to update list of exchanges that trades this coin
 # def updateWrapper(bot, update, args):
