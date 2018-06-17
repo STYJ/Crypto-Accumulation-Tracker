@@ -14,9 +14,9 @@ Goals:
 2. Replace the location in line 20 of ExchangeBot.py with the location of your token.txt file.
 3. Run Python3 ExchangeBot.py (Make sure you have Requests and BeautifulSoup installed)
 4. Once the program is running, it will automatically run the updateDB command which will update the internal database (dictionary) using CoinMarketCap. 
-5. To determine the exchanges available and the cumulative 24 hour rolling trade volume for a given ticker, run the e command followed by a ticker.
-6. To determine the cheapest exchange and its corresponding trading pair for a given ticker, run the m command followed by a ticker
-6. To determine the 24 hour rolling trade volume of a given exchange, its rank and the top 10 trading pairs, run the t command followed by the name of the exchange.
+5. To determine the exchanges available and the cumulative 24 hour rolling trade volume for a given ticker, run the c command followed by a ticker.
+6. To determine the cheapest exchange and its corresponding trading pair for a given ticker, run the min command followed by a ticker
+6. To determine the 24 hour rolling trade volume of a given exchange, its rank and the top 10 trading pairs, run the e command followed by the name of the exchange.
 
 #### Notes:
 - There is a caching functionality included in the bot to help optimize retrieval speeds. 

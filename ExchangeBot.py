@@ -38,15 +38,15 @@ def main():
 	updateDB_handler = CommandHandler('updateDB',
 									  functions.manualUpdateDBWrapper
 									  )
-	coin_handler = CommandHandler('e',
+	coin_handler = CommandHandler('c',
 								  functions.coinWrapper,
 								  pass_args=True
 								  )
-	cheapest_handler = CommandHandler('m',
+	cheapest_handler = CommandHandler('min',
 									  functions.cheapestWrapper,
 									  pass_args=True
 									  )
-	exchange_handler = CommandHandler('t',
+	exchange_handler = CommandHandler('e',
 									  functions.exchangeWrapper,
 									  pass_args=True
 									  )
