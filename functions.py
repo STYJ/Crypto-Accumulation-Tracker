@@ -381,52 +381,10 @@ def getExchangeWithCache(coin, coin_to_exchanges):
 def concatExchanges(exchanges):
     return '\n'.join(exchanges)
 
-# Function to analyse if a coin is getting pumped
-def analyse(*args):
-    print("In analyse function")
-
-    # Get source code
-    soup = getSource('history', args[0], args[1])
-
-    if not soup:
-        body = list(soup.select(
-            'div#historical-data table.table')[0].children)[3]
-        rows = list(body.children)
-        i = len(rows) - 2
-        accumulationFactor = 0
-
-        while(i - 2 > 0):
-
-            # 3 = open, 9 = closed, 11 = volume
-            row_a = list(rows[i])
-            open_a = int(row_a[3].get_text())
-            close_a = int(row_a[9].get_text())
-            vol_a = int(row_a[11].get_text().replace(',', ''))
-
-            row_b = list(rows[i-2])
-            open_b = int(row_b[3].get_text())
-            close_b = int(row_b[9].get_text())
-            vol_b = int(row_b[11].get_text().replace(',', ''))
-
-            i = i - 2
-
-        while(i < len(rows)):
-
-            row = list(rows[i])
-            vol = int(row[11].get_text().replace(',', ''))
-            print(vol)
-            sum += vol
-            i = i + 2
-
-        print("Sum is " + str(sum))
-
-        print(args[1])
-    else:
-        print("Analysis failed. Please check that you've entered the correct" +
-              " parameters.")
-
 # Parse cache to retrieve all the trading pairs for a given exchange
-def parseExchange(exchanges):
+def parseExchange(exchanges, order, ticker=None):
+
+    # Parse the exchanges argument into something more readable
     results = []
     for i in exchanges:
         for j in i[1].get_details():
@@ -435,7 +393,19 @@ def parseExchange(exchanges):
                             j['vol'],
                             j['price'],
                             j['url']))
-    return sorted(results[:10], key=lambda x: x[3], reverse=False)
+
+    # Filter results
+    updated_results = []
+    if ticker != None:
+        for i in results:
+            if ticker in i[1]:
+                updated_results.append(i)
+    else:
+        updated_results = results
+
+    if order == 'min':
+        return sorted(updated_results, key=lambda x: x[3], reverse=False)[:10]
+    return sorted(updated_results, key=lambda x: x[3], reverse=True)[:10]
 
 # Parse cache to retrieve all trading pairs for a given coin
 def parseCoin(coins):
@@ -473,6 +443,50 @@ def getNameAndRank(dirty_text):
             return False
 
     return exchange_name, exchange_rank
+
+# Function to analyse if a coin is getting pumped
+# def analyse(*args):
+#     print("In analyse function")
+
+#     # Get source code
+#     soup = getSource('history', args[0], args[1])
+
+#     if not soup:
+#         body = list(soup.select(
+#             'div#historical-data table.table')[0].children)[3]
+#         rows = list(body.children)
+#         i = len(rows) - 2
+#         accumulationFactor = 0
+
+#         while(i - 2 > 0):
+
+#             # 3 = open, 9 = closed, 11 = volume
+#             row_a = list(rows[i])
+#             open_a = int(row_a[3].get_text())
+#             close_a = int(row_a[9].get_text())
+#             vol_a = int(row_a[11].get_text().replace(',', ''))
+
+#             row_b = list(rows[i-2])
+#             open_b = int(row_b[3].get_text())
+#             close_b = int(row_b[9].get_text())
+#             vol_b = int(row_b[11].get_text().replace(',', ''))
+
+#             i = i - 2
+
+#         while(i < len(rows)):
+
+#             row = list(rows[i])
+#             vol = int(row[11].get_text().replace(',', ''))
+#             print(vol)
+#             sum += vol
+#             i = i + 2
+
+#         print("Sum is " + str(sum))
+
+#         print(args[1])
+#     else:
+#         print("Analysis failed. Please check that you've entered the correct" +
+#               " parameters.")
 
 ##################################
 #   Telegram Wrapper Functions   #
@@ -524,8 +538,7 @@ def exchangeWrapper(bot, update, args):
                                      "", "Coin | Trading Pair | Vol | Price"]
 
             if results:
-                print("Printing trading pairs with the highest rolling 24" + \
-                " hour trade volume")
+                print("Printing trading pairs...")
 
                 # list_of_exchanges is a list of concatenated exchanges into
                 # strings with a maximum length of 4096 characters, see
@@ -615,14 +628,24 @@ def coinWrapper(bot, update, args):
                 # bot.send_message(chat_id=update.message.chat_id, text=i,
                 # reply_to_message_id=update.message.message_id)
 
+# Find the most expensive trading pairs from the top 10 exchanges that trades
+# this coin
+def expensiveWrapper(bot, update, args):
+    minOrMax(bot, update, args, 'max')
+
 # Find the cheapest trading pair from the top 10 exchanges that trades this coin
 def cheapestWrapper(bot, update, args):
-    print()
+    minOrMax(bot, update, args, 'min')
 
-    if len(args) != 1:
+# Refactored this function as it is repeated.
+def minOrMax(bot, update, args, order):
+    print()
+    if len(args) < 1 or len(args) > 2:
         bot.send_message(chat_id=update.message.chat_id,
-                         text='Too few / many arguments! Please enter only 1' +
-                         ' ticker.',
+                         text='Too few / many arguments! Please enter either' +
+                         ' 1 or 2 arguments, your ticker followed by' +
+                         ' an optional filter for filtering the results e.g.' +
+                         ' /' + order + ' BTC USDT',
                          reply_to_message_id=update.message.message_id)
     else:
 
@@ -644,7 +667,15 @@ def cheapestWrapper(bot, update, args):
                              reply_to_message_id=update.message.message_id)
         else:
             exchanges = getExchangeWithCache(coin, coin_to_exchanges)
-            results = parseExchange(exchanges)
+
+            # If an additional ticker parameter is provided
+            if len(args) == 2:
+                print(args[1])
+                results = parseExchange(exchanges,
+                                        order=order,
+                                        ticker=args[1].upper())
+            else:
+                results = parseExchange(exchanges, order=order)
 
             if results:
                 print("Printing trading pairs...")

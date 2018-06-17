@@ -4,9 +4,9 @@
 Library: [Python-Telegram-Bot](https://github.com/python-telegram-bot/python-telegram-bot)
 
 Goals: 
-1. Given a coin ticker, to determine the exchanges where you can buy the coin from.
-2. Given a coin ticker, to determine the cheapest exchange and its corresponding trading pair.
-3. Given an exchange name, to determine the volume of a given exchange and its top 10 trading pairs.
+1. Given a coin ticker, to determine which exchanges you can buy this coin from.
+2. Given a coin ticker, to determine the cheapest / most expensive exchanges (from the most liquid exchanges) and its corresponding trading pair. Optional filtering by another ticker also supported.
+3. Given an exchange name, to determine the volume of that exchange and its top 10 trading pairs.
 
 #### Instructions:
 
@@ -15,8 +15,9 @@ Goals:
 3. Run Python3 ExchangeBot.py (Make sure you have Requests and BeautifulSoup installed)
 4. Once the program is running, it will automatically run the updateDB command which will update the internal database (dictionary) using CoinMarketCap. 
 5. To determine the exchanges available and the cumulative 24 hour rolling trade volume for a given ticker, run the c command followed by a ticker.
-6. To determine the cheapest exchange and its corresponding trading pair for a given ticker, run the min command followed by a ticker
-6. To determine the 24 hour rolling trade volume of a given exchange, its rank and the top 10 trading pairs, run the e command followed by the name of the exchange.
+6. To determine the cheapest / most expensive exchange and its corresponding trading pair for a given ticker, run the min or max command followed by a ticker
+7. You can also add an additional filter behind the min or max command e.g. /min BTC USD to show the cheapest BTC/USD pairs.
+8. To determine the cumulative 24 hour rolling trade volume of a given exchange, its rank and the top 10 trading pairs, run the e command followed by the name of the exchange.
 
 #### Notes:
 - There is a caching functionality included in the bot to help optimize retrieval speeds. 
@@ -30,7 +31,7 @@ Goals:
 #### Upcoming Features
 - [X] Update description to my commands when typing /command in Telegram
 - [X] Sorting exchanges by volume and what the trade volume is for that exchange
-- [X] Cheapest exchange to buy a given coin (from the top 10 most liquid exchange for the given coin) (requested by a user feedback)
+- [X] Cheapest / most expensive exchange to buy a given coin (requested by a user feedback)
 - [X] 24 hour rolling trade volume, its rank and the top 10 trading pairs of a given exchange (requested by a friend)
 - [ ] Determining the difference between the coins listed on 2 exchanges
 

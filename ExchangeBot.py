@@ -46,6 +46,9 @@ def main():
 									  functions.cheapestWrapper,
 									  pass_args=True
 									  )
+	expensive_handler = CommandHandler('max',
+									   functions.expensiveWrapper,
+									   pass_args=True)
 	exchange_handler = CommandHandler('e',
 									  functions.exchangeWrapper,
 									  pass_args=True
@@ -58,6 +61,7 @@ def main():
 	# Adding the handlers to the dispatcher
 	dispatcher.add_handler(updateDB_handler)
 	dispatcher.add_handler(coin_handler)
+	dispatcher.add_handler(expensive_handler)
 	dispatcher.add_handler(cheapest_handler)
 	dispatcher.add_handler(exchange_handler)
 	dispatcher.add_handler(start_handler)
