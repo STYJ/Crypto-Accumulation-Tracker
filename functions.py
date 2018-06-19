@@ -403,6 +403,9 @@ def parseExchange(exchanges, order, ticker=None):
     else:
         updated_results = results
 
+    if updated_results == []:
+        return False
+
     if order == 'min':
         return sorted(updated_results, key=lambda x: x[3], reverse=False)[:10]
     return sorted(updated_results, key=lambda x: x[3], reverse=True)[:10]
@@ -503,7 +506,7 @@ def manualUpdateDBWrapper(bot, update):
     bot.send_message(chat_id=update.message.chat_id,
                      text='Updating coin and exchange databases...')
     updateCoinDB(coin_database)
-    exchange_database = updateExchangeDB()
+    updateExchangeDB(exchange_database)
     bot.send_message(chat_id=update.message.chat_id, text='Update complete!')
 
 # Command to find the coins with the highest volume for this exchange
@@ -699,6 +702,13 @@ def minOrMax(bot, update, args, order):
 
                 bot.send_message(chat_id=update.message.chat_id,
                                  text=concatExchanges(trading_pairs),
+                                 disable_web_page_preview=True,
+                                 parse_mode='Markdown',
+                                 reply_to_message_id=update.message.message_id)
+            else:
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text='Invalid ticker filter provided, please' +
+                                 ' enter a valid ticker filter.',
                                  disable_web_page_preview=True,
                                  parse_mode='Markdown',
                                  reply_to_message_id=update.message.message_id)
