@@ -159,7 +159,7 @@ def updateCoin(coin, coin_to_exchanges):
         i = 1
 
         # Parse the entire tbody into a namedtuple array, sorted by total vol
-        # descending. Only retain the top 15 exchanges.
+        # descending.
         exchanges = dict()
 
         while(i < len(tbody)):
@@ -205,9 +205,9 @@ def updateCoin(coin, coin_to_exchanges):
                            key=lambda detail: detail[1].total_vol,
                            reverse=True)
 
-        # Return only the top 10 exchanges
-        if len(exchanges) > 10:
-            exchanges = exchanges[:10]
+        # Returns all exchanges, filtering top 10 exchanges logic is separated
+        # outside. For /c, you just slice off first 10. For /min or /max, you
+        # need to filter by ticker first then slice off top 10. 
         coin_to_exchanges[coin] = (exchanges, time.time())
         print(coin + " updated!")
     else:
@@ -604,7 +604,8 @@ def coinWrapper(bot, update, args):
                              " can pull its data.",
                              reply_to_message_id=update.message.message_id)
         else:
-            exchanges = getExchangeWithCache(coin, coin_to_exchanges)
+            # Get the top 10 exchanges in terms of volume
+            exchanges = getExchangeWithCache(coin, coin_to_exchanges)[:10]
 
             if exchanges:
                 print("Printing exchanges...")
