@@ -166,7 +166,7 @@ def updateCoin(coin, coin_to_exchanges):
             data = list(tbody[i].children)
 
             # Get name of exchange
-            exchange_name = list(data[3].children)[1].get_text()
+            exchange_name = list(data[3].children)[3].get_text()
 
             # Get trading pair
             trading_pair = list(data[5].children)[0].get_text()
